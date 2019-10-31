@@ -261,7 +261,7 @@ Write-Output "Azure authentication successfully Done. Result: `n$AzObj"
 
 #Authenticating to WVD
 try {
-	$WVDAuthentication = Add-RdsAccount -DeploymentUrl $RDBrokerURL -Credential $Credentials -TenantId $AADTenantId -ServicePrincipal
+	$WVDAuthentication = Add-RdsAccount -DeploymentUrl $RDBrokerURL -Credential $ServicePrincipalCredentials -TenantId $AADTenantId -ServicePrincipal
 }
 catch {
 	Write-Output "Failed to authenticate WVD: $($_.exception.message)"
@@ -270,13 +270,40 @@ catch {
 $WVDObj = $WVDAuthentication | Out-String
 Write-Output "Authenticating as service principal for WVD. Result: `n$WVDObj"
 
+$RmHostpoolnames = 0
+$RmHostpoolnames = @()
+
+foreach($HPName in $HostpoolNames){
 # Check if the hostpool load balancer type is persistent.
-$HostPoolInfo = Get-RdsHostPool -TenantName $TenantName -Name $HostpoolName
+$HostPoolInfo = Get-RdsHostPool -TenantName $TenantName -Name $HPName
 
 if($HostpoolInfo.LoadBalancerType -eq "Persistent"){
-Write-Output "$HostpoolName hostpool configured with Persistent Load balancer.So scale script doesn't apply for this load balancertype.Scale script will execute only with these load balancer types BreadthFirst, DepthFirst."
+Write-Output "$HPName hostpool configured with Persistent Load balancer.So scale script doesn't apply for this load balancertype.Scale script will execute only with these load balancer types BreadthFirst, DepthFirst. Please remove the from 'HostpoolName' input and try again"
 Exit
 }
+
+$SessionHostsList = Get-RDSSessionHost -Tenantname $TenantName -HostPoolName $HPName
+$SessionHostCount = ($SessionHostsList).count
+
+
+#Check if the hostpool have session hosts and compare count with minimum number of rdsh value
+if($SessionHostsList -eq $Null){
+Write-Output "Hostpool '$HPName' doesn't have session hosts. Deployment Script will skip the basic scale script configuration for this hostpool."
+$RmHostpoolnames += $HPName
+}
+elseif($SessionHostCount -le $MinimumNumberOfRDSH){
+Write-Output "Hostpool '$HPName' has less than the minimum number of session host required."
+$Confirmation = Read-Host "Do you wish to continue configuring the scale script for these available session hosts? [y/n]"
+if ($Confirmation -eq 'n') {
+Write-Output "Configuring the scale script is skipped for this hostpool '$HPName'."
+$RmHostpoolnames += $HPName
+}
+else{Write-Output "Configuring the scale script for the hostpool : '$HPName' and will keep the minimum required session hosts in running mode."}
+}
+}
+
+[array]$HostpoolNames = (Compare-Object -ReferenceObject $HostpoolNames -DifferenceObject $RmHostpoolnames).InputObject
+
 
 #Convert to local time to UTC time
 $CurrentDateTime = Get-Date
