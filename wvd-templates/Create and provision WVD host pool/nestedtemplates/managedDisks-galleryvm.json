@@ -219,7 +219,9 @@
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('rdshPrefix'), copyindex(), '-nic')]"
             ],
-            "identity": "[parameters('managedIdentity')]",
+            "identity": {
+                "type": "[parameters('managedIdentity')]"
+            },
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('rdshVmSize')]"
