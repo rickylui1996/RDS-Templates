@@ -8,6 +8,12 @@
                 "description": "URI of the sysprepped image vhd file to be used to create the session host VMs. For example, https://rdsstorage.blob.core.windows.net/vhds/sessionhostimage.vhd"
             }
         },
+        "managedIdentity": {
+            "type": "string",
+            "metadata": {
+                "description": "The type of managed identity for the VM. either 'None' for no managed identity, or 'systemAssigned' for a system assigned managed identitiy which is needed for Azure AD authentication"
+            }
+        },
         "storageAccountResourceGroupName": {
             "type": "string",
             "metadata": {
@@ -213,6 +219,7 @@
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('rdshPrefix'), copyindex(), '-nic')]"
             ],
+            "identity": "[parameters('managedIdentity')]",
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('rdshVmSize')]"

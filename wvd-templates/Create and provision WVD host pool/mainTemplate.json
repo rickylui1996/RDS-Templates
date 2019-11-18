@@ -16,6 +16,12 @@
             },
             "defaultValue": ""
         },
+        "AzureADAuthentication": {
+            "type": "bool",
+            "metadata":{
+                "description": "If true it will enable AzureAD authentication for the VM, and will create a system assigned managed identity."
+            }
+        },
         "rdshImageSource": {
             "type": "string",
             "metadata": {
@@ -283,6 +289,7 @@
         }
     },
     "variables": {
+        "managedIdentity": "[if(parameters('AzureADAuthentication'),'systemAssigned','None')]",
         "rdshManagedDisks": "[if(equals(parameters('rdshImageSource'), 'CustomVHD'), parameters('rdshUseManagedDisks'), bool('true'))]",
         "rdshPrefix": "[concat(parameters('rdshNamePrefix'),'-')]",
         "avSetSKU": "[if(variables('rdshManagedDisks'), 'Aligned', 'Classic')]",
@@ -340,6 +347,9 @@
                 "parameters": {
                     "vmImageVhdUri": {
                         "value": "[parameters('vmImageVhdUri')]"
+                    },
+                    "managedIdentity": {
+                        "value": "[variables('managedIdentity')]"
                     },
                     "storageAccountResourceGroupName": {
                         "value": "[parameters('storageAccountResourceGroupName')]"
@@ -402,6 +412,7 @@
             }
         },
         {
+            "condition": "[not(parameters('AzureADAuthentication'))]",
             "apiVersion": "2018-10-01",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(variables('rdshPrefix'), copyindex(),'/', 'joindomain')]",
@@ -428,6 +439,26 @@
                 "protectedSettings": {
                     "password": "[parameters('existingDomainPassword')]"
                 }
+            }
+        },
+        {
+            "condition": "[parameters('AzureADAuthentication')]",
+            "copy": {
+                "name": "rdsh-azuread-join-loop",
+                "count": "[parameters('rdshNumberOfInstances')]"
+            },
+            "name": "[concat(variables('rdshPrefix'),copyindex(),'/AADLoginForWindows')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2018-10-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[variables('vmCreation-linkedTemplate_name')]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.ActiveDirectory",
+                "type": "AADLoginForWindows",
+                "typeHandlerVersion": "0.3",
+                "autoUpgradeMinorVersion": true
             }
         },
         {

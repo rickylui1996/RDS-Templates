@@ -5,6 +5,9 @@
 		"_artifactsLocation": {
 			"value": "https://raw.githubusercontent.com/Everink/RDS-Templates/master/wvd-templates/Create%20and%20provision%20WVD%20host%20pool/"
 		},
+		"AzureADAuthentication": {
+			"value": true
+		},
 		"rdshImageSource": {
 			"value": "SharedImageGallery"
 		},
@@ -24,10 +27,10 @@
 			"value": "Hostpool1"
 		},
 		"rdshNamePrefix": {
-			"value": "demoVM"
+			"value": "AADdemo"
 		},
 		"rdshNumberOfInstances": {
-			"value": 2
+			"value": 1
 		},
 		"rdshVmSize": {
 			"value": "Standard_D2s_v3"
