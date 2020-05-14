@@ -9,7 +9,7 @@
 			"value": "SharedImageGallery"
 		},
 		"SharedImageGalleryResourceGroup": {
-			"value": "wvd-p-weu-sharedimagegallery-rg"
+			"value": "aibwinsig"
 		},
 		"SharedImageGalleryName": {
 			"value": "WVD_SharedImageGallery"
@@ -36,30 +36,28 @@
 			"value": "Premium_LRS"
 		},
 		"domainToJoin": {
-			"value": "roeleverink.nl"
+			"value": "rickylui1996hotmail.onmicrosoft.com"
 		},
 		"existingDomainUPN": {
-			"value": "sa-domainjoin@roeleverink.nl"
+			"value": "rickylui1996@hotmail.com"
 		},
 		"existingDomainPassword": {
 			"reference": {
 				"keyVault": {
-					"id": "/subscriptions/f7e06285-03e5-4c9d-95cd-32d791b2563e/resourcegroups/wvd-p-weu-keyvault-rg/providers/Microsoft.KeyVault/vaults/wvd-p-weu-keyvault01"
+					"id": "/subscriptions/d206ca81-b940-4491-8c12-1311bad5f0e3/resourceGroups/aibwinsig/providers/Microsoft.KeyVault/vaults/WVD-KeyVault20"
 				},
-				"secretName": "sa-domainjoin"
+				"secretName": "WVD-ADdomiain"
 			}
 		},
-		"ouPath": {
-			"value": "OU=Windows Virtual Desktop,OU=Computers,OU=Demo,DC=roeleverink,DC=nl"
-		},
+		
 		"existingVnetName": {
-			"value": "wvd-p-weu-vnet1"
+			"value": "AzureVnet2"
 		},
 		"existingSubnetName": {
-			"value": "wvd-p-weu-vnet1_CLIENTS"
+			"value": "frontend"
 		},
 		"virtualNetworkResourceGroupName": {
-			"value": "wvd-p-weu-network-rg"
+			"value": "azurevnet"
 		},
 		"rdBrokerURL": {
 			"value": "https://rdbroker.wvd.microsoft.com"
@@ -68,27 +66,27 @@
 			"value": "Default Tenant Group"
 		},
 		"existingTenantName": {
-			"value": "roeleverink.nl"
+			"value": "WVD-AD"
 		},		
 		"defaultDesktopUsers": {
-			"value": "r.everink@roeleverink.nl"
+			"value": "rickylui1996@rickylui1996hotmail.onmicrosoft.com"
 		},
 		"tenantAdminUpnOrApplicationId": {
-			"value": "514e2dd6-ecd4-417b-ac07-de44565cb818"
+			"value": "d883fd17-0229-4f6b-8d25-870bce1f1905"
 		},
 		"tenantAdminPassword": {
 			"reference": {
 				"keyVault": {
-					"id": "/subscriptions/f7e06285-03e5-4c9d-95cd-32d791b2563e/resourcegroups/wvd-p-weu-keyvault-rg/providers/Microsoft.KeyVault/vaults/wvd-p-weu-keyvault01"
+					"id": "/subscriptions/d206ca81-b940-4491-8c12-1311bad5f0e3/resourceGroups/aibwinsig/providers/Microsoft.KeyVault/vaults/WVD-KeyVault20"
 				},
-				"secretName": "WVD-SP"
+				"secretName": "WVD-KeyVault20"
 			}
 		},
 		"isServicePrincipal": {
 			"value": true
 		},
 		"aadTenantId": {
-			"value": "214da8f2-c2d8-4f61-8e13-8dba0a4edaa2"
+			"value": "4ea0b10c-92d9-413a-924c-7272aec6ca02"
 		}
 	}
 }
